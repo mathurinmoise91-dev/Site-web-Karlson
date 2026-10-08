@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tableau de bord</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #121212;
+      --surface: #1b1b1f;
+      --border: #2a2a31;
+      --text: #f2f2f5;
+      --text-muted: #9a9aa6;
+      --grid: #26262c;
+      --violet: #9d6bf7;
+      --green: #1fa273;
+      --neutral: #5a5a66;
+      --white: #e8e8ee;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .dashboard {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+
+    .dashboard__header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .dashboard__header h1 { margin: 0; font-size: 1.5rem; font-weight: 600; }
+    .dashboard__header p  { margin: 0; color: var(--text-muted); font-size: .875rem; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 16px 8px;
+      min-width: 0;
+    }
+
+    .card--wide { grid-column: span 2; }
+
+    .card__title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 4px;
+      font-size: .95rem;
+      font-weight: 600;
+    }
+
+    .card__title::before {
+      content: "";
+      width: 4px;
+      height: 14px;
+      border-radius: 2px;
+      background: var(--violet);
+    }
+
+    .card__subtitle { margin: 0; color: var(--text-muted); font-size: .8rem; }
+
+    .chart { width: 100%; height: 280px; }
+
+    @media (max-width: 1024px) {
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 640px) {
+      .grid { grid-template-columns: 1fr; }
+      .card--wide { grid-column: auto; }
+      .chart { height: 260px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="dashboard">
+    <header class="dashboard__header">
+      <h1>Tableau de bord</h1>
+      <p>Données de démonstration</p>
+    </header>
+
+    <section class="grid">
+      <article class="card">
+        <h2 class="card__title">Barres horizontales</h2>
+        <p class="card__subtitle">Taux de complétion par ville</p>
+        <div class="chart" id="hbar" role="img" aria-label="Taux de complétion par ville, en barres horizontales"></div>
+      </article>
+
+      <article class="card">
+        <h2 class="card__title">Barres verticales</h2>
+        <p class="card__subtitle">Ventes par date — valeur maximale en violet</p>
+        <div class="chart" id="vbar" role="img" aria-label="Ventes par date, en barres verticales"></div>
+      </article>
+
+      <article class="card">
+        <h2 class="card__title">Barres groupées</h2>
+        <p class="card__subtitle">Paris et Montréal, par jour</p>
+        <div class="chart" id="gbar" role="img" aria-label="Comparaison Paris et Montréal, en barres groupées"></div>
+      </article>
+
+      <article class="card">
+        <h2 class="card__title">Graphique linéaire</h2>
+        <p class="card__subtitle">Visites et inscriptions</p>
+        <div class="chart" id="line" role="img" aria-label="Visites et inscriptions dans le temps"></div>
+      </article>
+
+      <article class="card card--wide">
+        <h2 class="card__title">Graphique de surface</h2>
+        <p class="card__subtitle">Chiffre d'affaires cumulé (k$)</p>
+        <div class="chart" id="area" role="img" aria-label="Chiffre d'affaires dans le temps, en surface"></div>
+      </article>
+
+      <article class="card">
+        <h2 class="card__title">Anneau — Brésil</h2>
+        <p class="card__subtitle">Part du total</p>
+        <div class="chart" id="donut1" role="img" aria-label="Brésil : 36 % du total"></div>
+      </article>
+
+      <article class="card">
+        <h2 class="card__title">Anneau — Objectif</h2>
+        <p class="card__subtitle">Progression mensuelle</p>
+        <div class="chart" id="donut2" role="img" aria-label="Objectif mensuel : 24 % atteint"></div>
+      </article>
+
+      <article class="card">
+        <h2 class="card__title">Radar</h2>
+        <p class="card__subtitle">Score par période</p>
+        <div class="chart" id="radar1" role="img" aria-label="Score par période, en radar"></div>
+      </article>
+
+      <article class="card">
+        <h2 class="card__title">Radar comparatif</h2>
+        <p class="card__subtitle">2025 et 2026, par ville</p>
+        <div class="chart" id="radar2" role="img" aria-label="Comparaison 2025 et 2026 par ville, en radar"></div>
+      </article>
+
+      <article class="card">
+        <h2 class="card__title">Jauge — Satisfaction</h2>
+        <p class="card__subtitle">Puerto Vallarta</p>
+        <div class="chart" id="gauge1" role="img" aria-label="Satisfaction : 75 %"></div>
+      </article>
+
+      <article class="card">
+        <h2 class="card__title">Jauge — Occupation</h2>
+        <p class="card__subtitle">Puerto Vallarta</p>
+        <div class="chart" id="gauge2" role="img" aria-label="Occupation : 83 %"></div>
+      </article>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+  <script>
+    (function () {
+      const css = getComputedStyle(document.documentElement);
+      const C = {
+        violet:  css.getPropertyValue("--violet").trim(),
+        green:   css.getPropertyValue("--green").trim(),
+        neutral: css.getPropertyValue("--neutral").trim(),
+        white:   css.getPropertyValue("--white").trim(),
+        text:    css.getPropertyValue("--text").trim(),
+        muted:   css.getPropertyValue("--text-muted").trim(),
+        grid:    css.getPropertyValue("--grid").trim(),
+        surface: css.getPropertyValue("--surface").trim(),
+        track:   "#2a2a31"
+      };
+
+      // Shared defaults: recessive axes, thin marks, tooltips on every chart.
+      const base = {
+        backgroundColor: "transparent",
+        textStyle: { fontFamily: "Inter, system-ui, sans-serif", color: C.muted },
+        tooltip: {
+          backgroundColor: "#24242a",
+          borderColor: "#34343c",
+          textStyle: { color: C.text, fontSize: 12 }
+        },
+        legend: { show: false, top: 0, right: 0, icon: "roundRect", itemWidth: 10, itemHeight: 10, textStyle: { color: C.muted } },
+        animationDuration: 700
+      };
+
+      const axisCat = (data) => ({
+        type: "category",
+        data,
+        axisLine: { lineStyle: { color: C.grid } },
+        axisTick: { show: false },
+        axisLabel: { color: C.muted, fontSize: 11 }
+      });
+
+      const axisVal = (extra = {}) => ({
+        type: "value",
+        splitLine: { lineStyle: { color: C.grid } },
+        axisLabel: { color: C.muted, fontSize: 11 },
+        ...extra
+      });
+
+      const charts = [];
+      function mount(id, option) {
+        const el = document.getElementById(id);
+        const chart = echarts.init(el, null, { renderer: "svg" });
+        chart.setOption({ ...base, ...option });
+        charts.push(chart);
+        new ResizeObserver(() => chart.resize()).observe(el);
+        return chart;
+      }
+
+      const dates = ["06/02", "06/03", "06/04", "06/05", "06/06", "06/07", "06/08"];
+
+      // 1. Horizontal bars
+      const cities = ["Belize", "Venise", "Yémen", "Londres", "Belgique", "Bled"];
+      const completion = [51, 16, 22, 74, 65, 96];
+      mount("hbar", {
+        tooltip: { ...base.tooltip, trigger: "axis", axisPointer: { type: "shadow" }, valueFormatter: (v) => v + " %" },
+        grid: { left: 8, right: 8, top: 16, bottom: 8, containLabel: true },
+        xAxis: { type: "value", max: 100, show: false },
+        yAxis: [
+          { ...axisCat(cities), inverse: true, axisLine: { show: false }, axisLabel: { color: C.text, fontSize: 12 } },
+          { ...axisCat(completion.map((v) => v + " %")), inverse: true, position: "right", axisLine: { show: false }, axisLabel: { color: C.muted, fontSize: 12 } }
+        ],
+        series: [{
+          type: "bar",
+          name: "Complétion",
+          data: completion,
+          barWidth: 10,
+          showBackground: true,
+          backgroundStyle: { color: C.track, borderRadius: 4 },
+          itemStyle: { color: C.violet, borderRadius: [0, 4, 4, 0] }
+        }]
+      });
+
+      // 2. Vertical bars — the maximum is highlighted
+      const sales = [24, 18, 35, 15, 50, 30, 22];
+      const maxSale = Math.max(...sales);
+      mount("vbar", {
+        tooltip: { ...base.tooltip, trigger: "axis", axisPointer: { type: "shadow" } },
+        grid: { left: 8, right: 8, top: 24, bottom: 8, containLabel: true },
+        xAxis: axisCat(["06/02", "12/05", "02/18", "11/21", "02/20", "08/24", "02/01"]),
+        yAxis: axisVal(),
+        series: [{
+          type: "bar",
+          name: "Ventes",
+          barWidth: "45%",
+          data: sales.map((v) => ({
+            value: v,
+            itemStyle: { color: v === maxSale ? C.violet : C.neutral, borderRadius: [4, 4, 0, 0] },
+            label: { show: v === maxSale, position: "top", color: C.text, fontWeight: 600 }
+          }))
+        }]
+      });
+
+      // 3. Grouped bars — two series, 2px gap between adjacent bars
+      mount("gbar", {
+        color: [C.violet, C.green],
+        legend: { ...base.legend, show: true },
+        tooltip: { ...base.tooltip, trigger: "axis", axisPointer: { type: "shadow" } },
+        grid: { left: 8, right: 8, top: 32, bottom: 8, containLabel: true },
+        xAxis: axisCat(dates),
+        yAxis: axisVal(),
+        series: [
+          { type: "bar", name: "Paris",    data: [18, 9, 41, 26, 31, 16, 38], barGap: "15%", barMaxWidth: 12, itemStyle: { borderRadius: [4, 4, 0, 0] } },
+          { type: "bar", name: "Montréal", data: [32, 14, 34, 24, 35, 17, 21], barMaxWidth: 12, itemStyle: { borderRadius: [4, 4, 0, 0] } }
+        ]
+      });
+
+      // 4. Line chart
+      const months = ["02", "03", "04", "05", "06", "07", "08", "09", "10"];
+      mount("line", {
+        color: [C.violet, C.green],
+        legend: { ...base.legend, show: true },
+        tooltip: { ...base.tooltip, trigger: "axis", axisPointer: { type: "line", lineStyle: { color: C.muted, type: "dashed" } } },
+        grid: { left: 8, right: 16, top: 32, bottom: 8, containLabel: true },
+        xAxis: { ...axisCat(months), boundaryGap: false },
+        yAxis: axisVal(),
+        series: [
+          { type: "line", name: "Visites",      data: [5, 25, 23, 35, 28, 40, 22, 28, 26], symbolSize: 8, lineStyle: { width: 2 } },
+          { type: "line", name: "Inscriptions", data: [2, 22, 18, 25, 33, 16, 27, 24, 27], symbolSize: 8, lineStyle: { width: 2 } }
+        ]
+      });
+
+      // 5. Area chart
+      mount("area", {
+        tooltip: { ...base.tooltip, trigger: "axis", valueFormatter: (v) => v + " k$", axisPointer: { type: "line", lineStyle: { color: C.muted, type: "dashed" } } },
+        grid: { left: 8, right: 16, top: 24, bottom: 8, containLabel: true },
+        xAxis: { ...axisCat(["06/01", "06/02", "06/03", "06/04", "06/05", "06/06", "06/07", "06/08", "06/09", "06/10"]), boundaryGap: false },
+        yAxis: axisVal(),
+        series: [{
+          type: "line",
+          name: "Chiffre d'affaires",
+          data: [4, 18, 25, 22, 34, 30, 40, 24, 27, 26],
+          smooth: 0.25,
+          symbolSize: 8,
+          itemStyle: { color: C.violet },
+          lineStyle: { width: 2, color: C.violet },
+          areaStyle: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: "rgba(157,107,247,.45)" },
+              { offset: 1, color: "rgba(157,107,247,0)" }
+            ])
+          },
+          markPoint: {
+            symbol: "circle",
+            symbolSize: 10,
+            itemStyle: { color: C.white, borderColor: C.violet, borderWidth: 2 },
+            label: { position: "top", color: C.text, fontWeight: 600, formatter: "{c} k$" },
+            data: [{ type: "max", name: "Maximum" }]
+          }
+        }]
+      });
+
+      // 6–7. Donuts with the percentage in the centre
+      function donut(id, pct, label, color) {
+        mount(id, {
+          tooltip: { ...base.tooltip, trigger: "item", formatter: "{b} : {c} %" },
+          title: {
+            text: pct + " %",
+            subtext: label,
+            left: "center",
+            top: "38%",
+            textStyle: { color: C.text, fontSize: 30, fontWeight: 600 },
+            subtextStyle: { color: C.muted, fontSize: 12 },
+            itemGap: 4
+          },
+          series: [{
+            type: "pie",
+            radius: ["62%", "76%"],
+            center: ["50%", "50%"],
+            startAngle: 90,
+            avoidLabelOverlap: false,
+            label: { show: false },
+            itemStyle: { borderColor: C.surface, borderWidth: 2, borderRadius: 4 },
+            emphasis: { scale: false },
+            data: [
+              { value: pct,       name: label,   itemStyle: { color } },
+              { value: 100 - pct, name: "Reste", itemStyle: { color: C.track } }
+            ]
+          }]
+        });
+      }
+      donut("donut1", 36, "Brésil", C.violet);
+      donut("donut2", 24, "Objectif atteint", C.green);
+
+      // 8. Radar — single series
+      mount("radar1", {
+        tooltip: { ...base.tooltip, trigger: "item" },
+        radar: radarFrame(["Déc.", "Avril", "Sept.", "Oct.", "Mai"]),
+        series: [{
+          type: "radar",
+          symbolSize: 6,
+          data: [{ name: "Score", value: [72, 64, 55, 40, 80], itemStyle: { color: C.violet }, lineStyle: { width: 2 }, areaStyle: { color: "rgba(157,107,247,.3)" } }]
+        }]
+      });
+
+      // 9. Radar — two series
+      mount("radar2", {
+        tooltip: { ...base.tooltip, trigger: "item" },
+        legend: { ...base.legend, show: true, data: ["2025", "2026"] },
+        radar: radarFrame(["Amsterdam", "Sydney", "Auckland", "Le Cap", "Santiago"]),
+        series: [{
+          type: "radar",
+          symbolSize: 6,
+          data: [
+            { name: "2025", value: [60, 45, 70, 50, 55], itemStyle: { color: C.green },  lineStyle: { width: 2 }, areaStyle: { color: "rgba(31,162,115,.18)" } },
+            { name: "2026", value: [85, 70, 50, 65, 75], itemStyle: { color: C.violet }, lineStyle: { width: 2 }, areaStyle: { color: "rgba(157,107,247,.25)" } }
+          ]
+        }]
+      });
+
+      function radarFrame(names) {
+        return {
+          center: ["50%", "56%"],
+          radius: "62%",
+          indicator: names.map((name) => ({ name, max: 100 })),
+          axisName: { color: C.text, fontSize: 11 },
+          splitLine: { lineStyle: { color: C.grid } },
+          splitArea: { areaStyle: { color: ["transparent"] } },
+          axisLine: { lineStyle: { color: C.grid } }
+        };
+      }
+
+      // 10–11. Gauges
+      function gauge(id, value, label, color, full) {
+        mount(id, {
+          tooltip: { ...base.tooltip, formatter: () => `${label} : ${value} %` },
+          series: [{
+            type: "gauge",
+            startAngle: full ? 225 : 200,
+            endAngle: full ? -45 : -20,
+            min: 0,
+            max: 100,
+            center: ["50%", full ? "55%" : "60%"],
+            radius: "88%",
+            progress: { show: true, width: 14, roundCap: true, itemStyle: { color } },
+            axisLine: { roundCap: true, lineStyle: { width: 14, color: [[1, C.track]] } },
+            axisTick: { show: full, distance: -26, length: 5, lineStyle: { color: C.neutral, width: 2 } },
+            splitLine: { show: false },
+            axisLabel: { show: false },
+            pointer: { show: !full, length: "58%", width: 4, itemStyle: { color: C.white } },
+            anchor: { show: !full, size: 12, itemStyle: { color: C.white, borderColor: color, borderWidth: 3 } },
+            title: { offsetCenter: [0, full ? "28%" : "62%"], color: C.muted, fontSize: 12 },
+            detail: {
+              valueAnimation: true,
+              offsetCenter: [0, full ? "-4%" : "36%"],
+              formatter: "{value} %",
+              color: C.text,
+              fontSize: 30,
+              fontWeight: 600
+            },
+            data: [{ value, name: label }]
+          }]
+        });
+      }
+      gauge("gauge1", 75, "Satisfaction", C.violet, true);
+      gauge("gauge2", 83, "Occupation", C.green, false);
+
+      window.addEventListener("resize", () => charts.forEach((c) => c.resize()));
+    })();
+  </script>
+</body>
+</html>
